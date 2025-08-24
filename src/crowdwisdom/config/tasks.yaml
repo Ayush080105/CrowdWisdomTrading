@@ -1,41 +1,43 @@
-  scrape_data:
-    description: >
-      Use the Web Scraper Tool to fetch actual numbers from prediction market sites.
-      Example usage:
-        - PredictIt: https://www.predictit.org/markets (selector ".contract__price")
-        - Polymarket: https://polymarket.com/markets (selector ".MarketCard__Price")
-        - Kalshi: https://kalshi.com/markets (selector ".price")
-      Extract product name and price.
-    agent: data_collector
-    expected_output: >
-      A structured JSON list of objects where each object contains:
-      - site name
-      - product/contract name
-      - extracted price/value
-      - timestamp of extraction
+scrape_data:
+  description: >
+    Use the Web Scraper Tool to fetch active prediction markets and their
+    outcome prices from sites like Polymarket and Kalshi.
+    Handle infinite scrolling or dynamic rendering where required.
+    Selectors may differ by site (e.g., Polymarket cards, Kalshi market tiles).
+    For each market, extract:
+      - contract/product name
+      - all available outcomes (Yes/No or multiple options) with prices
+  agent: data_collector
+  expected_output: >
+    JSON list of objects, each with:
+      - site (string)
+      - product_name (string)
+      - outcomes (dict of {outcome: price/percentage})
+      - timestamp (ISO 8601 UTC)
 
+identify_products:
+  description: >
+    Compare scraped products across sites to identify contracts
+    referring to the same real-world event.
+    Normalize product naming (case-insensitive, remove punctuation/dates).
+    Use fuzzy matching to group near-duplicates.
+    Assign a confidence score (0–1) for the match quality.
+  agent: product_identifier
+  expected_output: >
+    JSON array of unified products with fields:
+      - product (normalized string)
+      - matches (list of {site, product_name, outcomes})
+      - confidence (float 0–1)
 
-
-
-  identify_products:
-    description: >
-      Compare and analyze scraped products to identify which ones refer to the
-      same event. Unify them into a single representation and assign a confidence
-      score between 0 and 1.
-    expected_output: >
-      JSON array of unified products with fields:
-      product, matches[{site, price}], confidence.
-    agent: product_identifier
-
-  organize_data:
-    description: >
-      Merge the extracted product data into a single CSV.
-      Each row should be:
-      Product, Site1 Price, Site2 Price, Site3 Price, Confidence
-      Confidence is a score (0–1) based on consistency across sites.
-    expected_output: >
-      A CSV string like:
-      Product,Site1 Price,Site2 Price,Site3 Price,Confidence
-      NYC Mayoral Race Winner?,0.68,0.72,0.65,0.9
-    agent: data_organizer
-
+organize_data:
+  description: >
+    Merge the unified product data into a structured CSV for analysis.
+    Each row corresponds to one normalized product.
+    Include outcome prices from each site as separate columns
+    (e.g., Kalshi Yes, Kalshi No, Polymarket Yes, Polymarket No).
+    Confidence reflects the alignment strength across sources.
+  agent: data_organizer
+  expected_output: >
+    A CSV string like:
+    Product,Polymarket Yes,Polymarket No,Kalshi Yes,Kalshi No,Confidence
+    "NYC Mayoral Race Winner?",0.68,0.32,0.72,0.28,0.9

@@ -52,7 +52,16 @@ data_organizer:
     llm: gpt-4o-mini
     output_format: >
       CSV with columns:
-        - Unified Product
-        - Site
-        - Price
+        - Product
+        - Site1 Price
+        - Site2 Price
+        - Site3 Price
         - Confidence
+      Notes:
+        - Ensure missing prices are represented as "N/A".
+        - Align columns so the CSV is parseable.
+        - Example:
+          Product,Site1 Price,Site2 Price,Site3 Price,Confidence
+          Sports MLB World Series Champion 2025 Los Angeles Dodgers,1.0,1.0,1.0,0.9
+          Politics Fed Fed decision in September?,1.0,1.0,N/A,0.95
+
