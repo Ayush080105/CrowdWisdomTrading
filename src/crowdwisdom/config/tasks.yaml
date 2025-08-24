@@ -1,0 +1,41 @@
+  scrape_data:
+    description: >
+      Use the Web Scraper Tool to fetch actual numbers from prediction market sites.
+      Example usage:
+        - PredictIt: https://www.predictit.org/markets (selector ".contract__price")
+        - Polymarket: https://polymarket.com/markets (selector ".MarketCard__Price")
+        - Kalshi: https://kalshi.com/markets (selector ".price")
+      Extract product name and price.
+    agent: data_collector
+    expected_output: >
+      A structured JSON list of objects where each object contains:
+      - site name
+      - product/contract name
+      - extracted price/value
+      - timestamp of extraction
+
+
+
+
+  identify_products:
+    description: >
+      Compare and analyze scraped products to identify which ones refer to the
+      same event. Unify them into a single representation and assign a confidence
+      score between 0 and 1.
+    expected_output: >
+      JSON array of unified products with fields:
+      product, matches[{site, price}], confidence.
+    agent: product_identifier
+
+  organize_data:
+    description: >
+      Merge the extracted product data into a single CSV.
+      Each row should be:
+      Product, Site1 Price, Site2 Price, Site3 Price, Confidence
+      Confidence is a score (0–1) based on consistency across sites.
+    expected_output: >
+      A CSV string like:
+      Product,Site1 Price,Site2 Price,Site3 Price,Confidence
+      NYC Mayoral Race Winner?,0.68,0.72,0.65,0.9
+    agent: data_organizer
+

@@ -1,0 +1,13 @@
+```
+Product,Site1 Price,Site2 Price,Site3 Price,Confidence
+Sports MLB World Series Champion 2025 Los Angeles Dodgers,1.0,1.0,1.0,0.9
+Politics Fed Fed decision in September?,1.0,1.0,,0.95
+Elon Musk # of tweets August 22-29?,1.0,1.0,,0.95
+Sports Formula 1 F1 Drivers Champion,1.0,1.0,,0.9
+Sports NFL Super Bowl Champion 2026,1.0,1.0,,0.9
+NYC Mayor New York City Mayoral Election,1.0,1.0,,0.95
+Crypto Bitcoin What price will Bitcoin hit August 18-24?,2.0,2.0,,0.95
+Crypto Ethereum What price will Ethereum hit August 18-24?,2.0,2.0,,0.95
+Sports Tennis 2025 US Open Winner (M),2.0,2.0,,0.95
+Crypto Ye Was Kanye hacked?,1.0,1.0,,0.85
+```
